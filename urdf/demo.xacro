@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="open3d_demo" >
+
+  <xacro:arg name="use_nominal_extrinsics" default="false"/>
+  <xacro:arg name="add_plug" default="false" />
+  <xacro:arg name="use_mesh" default="true" />
+  
+  <!-- ur3 -->
+  <xacro:include filename="$(find ur_description)/urdf/ur3.xacro" />
+  <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" /> 
+
+  <!-- arm -->
+ <!-- <xacro:ur3_robot prefix=""/> -->
+
+  <!-- camera -->
+  <xacro:sensor_d435 parent="tool0" use_nominal_extrinsics="$(arg use_nominal_extrinsics)" add_plug="$(arg add_plug)" use_mesh="$(arg use_mesh)">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:sensor_d435> 
+  
+  <link name="world" />
+
+  <link name="table">
+    <visual>
+      <geometry>
+        <box size="1 1 1" />
+      </geometry>
+      <material name="Orange">
+        <color rgba="1.0 0.4 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="1 1 1" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="world_to_table_joint" type="fixed">
+    <parent link="world" />
+    <child link = "table" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
+
+  <joint name="table_to_base_link_joint" type="fixed">
+    <parent link="table" />
+    <child link = "base_link" />
+    <origin xyz="0.0 0.0 0.5" rpy="0.0 0.0 0.0" />
+  </joint>
+  
+</robot>
