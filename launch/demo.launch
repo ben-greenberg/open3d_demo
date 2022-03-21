@@ -1,19 +1,36 @@
 <?xml version="1.0"?>
 <launch>
+  <arg name="robot_description_file" default="$(find open3d_demo)/urdf/demo.xacro"/>
   <arg name="robot_description" default="robot_description"/>
   <arg name="joint_state_gui" default="true"/>
   <arg name="sim_robot" default="true"/>
   <arg name="rviz" default="true"/>
+  <arg name="robot_ip" default="192.168.56.11"/>
     
   <param name="$(arg robot_description)" command="$(find xacro)/xacro --inorder '$(find open3d_demo)/urdf/demo.xacro'" />
   
   <node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz"
      args="-d $(find open3d_demo)/config/demo.rviz" />
 
-  <group if="$(arg joint_state_gui)">
+  <group if="$(arg sim_robot)">
     <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" respawn="true"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true"/>
   </group>
   
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true"/>
-
+  <group unless="$(arg sim_robot)">
+    <include file="$(find ur_robot_driver)/launch/ur3_bringup.launch">
+      <arg name="robot_ip" value="$(arg robot_ip)"/>
+    </include>
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+      <arg name="enable_pointcloud" value="true"/>
+      <arg name="align_depth" value="true"/>
+    </include>
+    <include file="$(find open3d_interface)/launch/yak.launch">
+      <arg name="depth_image_topic" value="/camera/aligned_depth_to_color/image_raw"/>
+      <arg name="color_image_topic" value="/camera/color/image_raw"/>
+      <arg name="camera_info_topic" value="/camera/color/camera_info"/>
+    </include>
+    
+  </group>
+  
 </launch>
