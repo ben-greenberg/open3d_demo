@@ -17,10 +17,13 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true"/>
   </group>
   
-  <group unless="$(arg sim_robot)">
-    <include file="$(find ur_robot_driver)/launch/ur3_bringup.launch">
-      <arg name="robot_ip" value="$(arg robot_ip)"/>
-    </include>
+  <group unless="$(arg sim_robot)">    
+    <group>
+      <remap from="joint_states" to="robot_joint_states" />
+      <include file="$(find ur_robot_driver)/launch/ur3_bringup.launch">
+        <arg name="robot_ip" value="$(arg robot_ip)"/>
+      </include>
+    </group>
     <include file="$(find realsense2_camera)/launch/rs_camera.launch">
       <arg name="enable_pointcloud" value="true"/>
       <arg name="align_depth" value="true"/>
@@ -31,6 +34,40 @@
       <arg name="camera_info_topic" value="/camera/color/camera_info"/>
     </include>
     
+    <arg name="wcal" default="true"/> <!-- WARNING, only one of these two may be true at a time -->
+    <arg name="ical" default="false"/> <!-- WARNING, only one of these two may be true at a time -->
+  
+    <!-- publish mutable_joint_states topic to facilitate calibration-->
+    <node name="mutable_joint_state_publisher" pkg="industrial_extrinsic_cal" type="mutable_joint_state_publisher" output="screen">
+       <param name="mutable_joint_state_yaml_file" value="$(find open3d_demo)/config/mutable_joint_states.yaml" />
+       <param name="overwrite_mutable_values" value="true"/>
+       <remap from="joint_states" to="/mutable_joint_states"/>
+    </node>
+
+    <node if="$(arg wcal)" name="wrist_cal_node" pkg="industrial_extrinsic_cal" type="wrist_cal_srv" output="screen" respawn="true">
+      <param name="yaml_file_path" value="$(find open3d_demo)/config/"/>
+      <param name="camera_file" value="realsense_wcal_camera.yaml"/>
+      <param name="target_file" value="calibration_target.yaml"/>
+      <param name="target_mount_frame" value="world"/>
+      <param name="camera_mount_frame" value="camera_depth_optical_frame"/>
+      <param name="save_data" value="true"/>
+      <param name="data_directory" value="$(find open3d_demo)/data"/>
+      <param name="use_circle_detector" value="true"/>
+      <param name="realsense/color/max_area" value="2100"/>
+      <param name="realsense/color/min_area" value="100"/>
+      <param name="realsense/color/max_threshold" value="200"/>
+    </node>
+    
+    <node name="combined_joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+      <rosparam param="source_list">[robot_joint_states, mutable_joint_states]</rosparam>
+      <param name="publish_default_velocities" value="true" />
+      <param name="publish_default_efforts" value="true" />
+      <param name="publish_default_positions" value="true" />
+    </node>
+    
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+
   </group>
   
 </launch>

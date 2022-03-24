@@ -47,4 +47,111 @@
     <origin xyz="0.0 0.0 0.5" rpy="0.0 0.0 0.0" />
   </joint>
   
+  <!-- realsense calibration stuff -->
+  <link name="realsense_x_trans"/>
+  <link name="realsense_y_trans"/>
+  <link name="realsense_z_trans"/>
+  <link name="realsense_pitch"/>
+  <link name="realsense_yaw"/>
+  <link name="realsense_optical_frame"/>
+  <joint name="realsense_x_joint" type="prismatic">
+    <parent link="tool0"/>
+    <child link="realsense_x_trans"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis rpy="0 0 0" xyz="1 0 0"/>
+    <limit effort="30" lower="-1.0" upper="1.0" velocity="0.0508"/>
+  </joint>
+  <joint name="realsense_y_joint" type="prismatic">
+    <parent link="realsense_x_trans"/>
+    <child link="realsense_y_trans"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+    <limit effort="30" lower="-1.0" upper="1.0" velocity="0.0508"/>
+  </joint>
+  <joint name="realsense_z_joint" type="prismatic">
+    <parent link="realsense_y_trans"/>
+    <child link="realsense_z_trans"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis rpy="0 0 0" xyz="0 0 1"/>
+    <limit effort="30" lower="-1.0" upper="1.0" velocity="0.0508"/>
+  </joint>
+  <joint name="realsense_yaw_joint" type="revolute">
+    <parent link="realsense_z_trans"/>
+    <child link="realsense_yaw"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <limit effort="2" lower="-6.2832" upper="6.2832" velocity="10"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <joint name="realsense_pitch_joint" type="revolute">
+    <parent link="realsense_yaw"/>
+    <child link="realsense_pitch"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <limit effort="2" lower="-6.2832" upper="6.2832" velocity="10"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <joint name="realsense_roll_joint" type="revolute">
+    <parent link="realsense_pitch"/>
+    <child link="realsense_optical_frame"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <limit effort="2" lower="-6.2832" upper="6.2832" velocity="10"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <!-- target calibration stuff -->
+  <link name="target"/>
+  <link name="target_x_trans">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.0005"/>
+      </geometry>
+    </visual>
+  </link>
+  <link name="target_y_trans"/>
+  <link name="target_z_trans"/>
+  <link name="target_pitch"/>
+  <link name="target_yaw"/>
+  <joint name="target_x_joint" type="prismatic">
+    <parent link="world"/>
+    <child link="target_x_trans"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis rpy="0 0 0" xyz="1 0 0"/>
+    <limit effort="30" lower="-1.0" upper="1.0" velocity="0.0508"/>
+  </joint>
+  <joint name="target_y_joint" type="prismatic">
+    <parent link="target_x_trans"/>
+    <child link="target_y_trans"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+    <limit effort="30" lower="-1.0" upper="1.0" velocity="0.0508"/>
+  </joint>
+  <joint name="target_z_joint" type="prismatic">
+    <parent link="target_y_trans"/>
+    <child link="target_z_trans"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <axis rpy="0 0 0" xyz="0 0 1"/>
+    <limit effort="30" lower="-1.0" upper="1.0" velocity="0.0508"/>
+  </joint>
+  <joint name="target_yaw_joint" type="revolute">
+    <parent link="target_z_trans"/>
+    <child link="target_yaw"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <limit effort="2" lower="-6.2832" upper="6.2832" velocity="10"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <joint name="target_pitch_joint" type="revolute">
+    <parent link="target_yaw"/>
+    <child link="target_pitch"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <limit effort="2" lower="-6.2832" upper="6.2832" velocity="10"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <joint name="target_roll_joint" type="revolute">
+    <parent link="target_pitch"/>
+    <child link="target"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <limit effort="2" lower="-6.2832" upper="6.2832" velocity="10"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
 </robot>

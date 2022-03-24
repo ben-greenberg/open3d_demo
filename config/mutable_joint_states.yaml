@@ -1,0 +1,12 @@
+realsense_pitch_joint: 0
+realsense_roll_joint: 0
+realsense_x_joint: -0.114
+realsense_y_joint: 0.018
+realsense_yaw_joint: -1.571
+realsense_z_joint: 0.021
+target_pitch_joint: 0
+target_roll_joint: 0
+target_x_joint: -0.28
+target_y_joint: 0.374
+target_yaw_joint: 0
+target_z_joint: 0.5
