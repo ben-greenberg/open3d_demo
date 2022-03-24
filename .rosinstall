@@ -13,3 +13,15 @@
 - git:
     local-name: ur_msgs
     uri: git@github.com:ros-industrial/ur_msgs.git
+- git:
+    local-name: industrial_calibration
+    uri: https://github.com/ros-industrial/industrial_calibration.git
+    version: melodic-devel
+- git:
+    local-name: intelligent_actuator
+    uri: https://github.com/ros-industrial/intelligent_actuator.git
+- git:
+    local-name: joint_state_publisher
+    uri: https://github.com/ros/joint_state_publisher.git
+    version: noetic-devel
+    

@@ -92,7 +92,7 @@
   <joint name="realsense_roll_joint" type="revolute">
     <parent link="realsense_pitch"/>
     <child link="realsense_optical_frame"/>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0.0028 0.0005 -0.0015" xyz="-0.0157 0.0098 0.0091"/>
     <limit effort="2" lower="-6.2832" upper="6.2832" velocity="10"/>
     <axis xyz="1 0 0"/>
   </joint>
